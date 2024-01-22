@@ -4,7 +4,7 @@ This installer is a Go program that downloads the latest release of the DeZeeKee
 
 ## How to Run the Installer
 
-1. Download the latest release of the installer from the [releases page](https://github.com/yourusername/dezeekeesdesktoplist-installer/releases).
+1. Download the latest release of the installer from the [releases page](https://github.com/dezeekees/dezeekeesdesktoplist-installer/releases).
 
 
 2. Navigate to the directory where you downloaded the installer
