@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -13,6 +14,7 @@ type Release struct {
 		Name               string `json:"name"`
 		BrowserDownloadURL string `json:"browser_download_url"`
 	} `json:"assets"`
+	TagName string `json:"tag_name"`
 }
 
 func DownloadLatestRelease() error {
@@ -28,6 +30,9 @@ func DownloadLatestRelease() error {
 	}
 
 	for _, release := range releases {
+
+		fmt.Println("Downloading release version " + release.TagName)
+
 		for _, asset := range release.Assets {
 			if asset.Name == "dezeekeesdesktoplist.exe" {
 				resp, err := http.Get(asset.BrowserDownloadURL)

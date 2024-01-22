@@ -56,7 +56,5 @@ func makeRegistryKeys() {
 		os.Exit(1)
 	}
 
-	fmt.Println(keyValue)
-
 	fmt.Println("Registry keys and values created successfully.")
 }

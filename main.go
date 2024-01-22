@@ -29,7 +29,6 @@ func main() {
 	makeRegistryKeys()
 
 	// download latest release
-	fmt.Println("Downloading latest release")
 	err := DownloadLatestRelease()
 
 	if err != nil {
