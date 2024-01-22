@@ -28,6 +28,14 @@ func main() {
 
 	makeRegistryKeys()
 
+	// download latest release
+	fmt.Println("Downloading latest release")
+	err := DownloadLatestRelease()
+
+	if err != nil {
+		fmt.Println("Error downloading latest release:", err)
+	}
+
 	// wait for user input
 	fmt.Println("Press enter to exit")
 	fmt.Scanln()
