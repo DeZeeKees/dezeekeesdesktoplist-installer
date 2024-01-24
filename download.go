@@ -18,7 +18,7 @@ type Release struct {
 	Prerelease bool   `json:"prerelease"`
 }
 
-func DownloadLatestRelease(isPrerelease bool) error {
+func DownloadLatestRelease(isPrerelease bool, isUpdating bool) error {
 
 	var release Release
 	var err error
@@ -43,10 +43,20 @@ func DownloadLatestRelease(isPrerelease bool) error {
 			}
 			defer resp.Body.Close()
 
-			out, err := os.Create(filepath.Join(installPath, asset.Name))
-			if err != nil {
-				return err
+			var out *os.File
+
+			if isUpdating {
+				out, err = os.Create(installPath)
+				if err != nil {
+					return err
+				}
+			} else {
+				out, err = os.Create(filepath.Join(installPath, "dezeekeesdesktoplist.exe"))
+				if err != nil {
+					return err
+				}
 			}
+
 			defer out.Close()
 
 			_, err = io.Copy(out, resp.Body)

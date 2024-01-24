@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"golang.org/x/sys/windows/registry"
 )
@@ -77,6 +78,11 @@ func GetInstallPath() {
 		os.Exit(1)
 	}
 
-	// Get install path from registry value
-	installPath = keyValue[1 : len(keyValue)-1]
+	parts := strings.Split(keyValue, "\"")
+	if len(parts) >= 3 {
+		installPath = parts[1] // The second element is the install path
+	} else {
+		fmt.Println("Error parsing registry value")
+		os.Exit(1)
+	}
 }
