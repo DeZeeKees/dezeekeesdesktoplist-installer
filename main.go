@@ -27,15 +27,15 @@ func main() {
 	isUpdating := includes(os.Args, updateArgument)
 	isPrerelease := includes(os.Args, prereleaseArgument)
 
-	if isUpdating {
-		// get install path from registry
-		GetInstallPath()
-	}
-
 	fmt.Println("Welcome to the Dezeekees Desktop List installer")
 
 	// split string on last occurence of \ and remove the last part
 	installPath = "C:\\Program Files\\Dezeekees Desktop List"
+
+	if isUpdating {
+		// get install path from registry
+		GetInstallPath()
+	}
 
 	if !isUpdating {
 		changeInstallPath()
@@ -43,7 +43,7 @@ func main() {
 	}
 
 	// download latest release
-	err := DownloadLatestRelease(isPrerelease)
+	err := DownloadLatestRelease(isPrerelease, isUpdating)
 
 	if err != nil {
 		fmt.Println("Error downloading latest release:", err)
@@ -53,7 +53,12 @@ func main() {
 		// wait for user input
 		fmt.Println("Press enter to exit")
 		fmt.Scanln()
+
+		return
 	}
+
+	// open the installed program
+	openInstallPath()
 }
 
 func changeInstallPath() {
@@ -202,4 +207,9 @@ func includes(slice []string, target string) bool {
 func amAdmin() bool {
 	_, err := os.Open("\\\\.\\PHYSICALDRIVE0")
 	return err == nil
+}
+
+func openInstallPath() {
+	cmd := exec.Command(installPath)
+	cmd.Start()
 }
