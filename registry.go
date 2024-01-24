@@ -58,3 +58,25 @@ func makeRegistryKeys() {
 
 	fmt.Println("Registry keys and values created successfully.")
 }
+
+func GetInstallPath() {
+	regPath := `dezeekeesdesktoplist\shell\open\command`
+
+	// Open registry key
+	key, err := registry.OpenKey(registry.CLASSES_ROOT, regPath, registry.ALL_ACCESS)
+	if err != nil {
+		fmt.Println("Error opening registry key:", err)
+		os.Exit(1)
+	}
+	defer key.Close()
+
+	// Get default value from "command" subkey
+	keyValue, _, err := key.GetStringValue("")
+	if err != nil {
+		fmt.Println("Error getting registry value:", err)
+		os.Exit(1)
+	}
+
+	// Get install path from registry value
+	installPath = keyValue[1 : len(keyValue)-1]
+}
