@@ -11,6 +11,11 @@ var clear map[string]func() //create a map for storing clear funcs
 
 var installPath string
 
+const (
+	updateArgument     = "--update"
+	prereleaseArgument = "--prerelease"
+)
+
 func main() {
 
 	if !amAdmin() {
@@ -19,25 +24,36 @@ func main() {
 		return
 	}
 
+	isUpdating := includes(os.Args, updateArgument)
+	isPrerelease := includes(os.Args, prereleaseArgument)
+
+	if isUpdating {
+		// get install path from registry
+		GetInstallPath()
+	}
+
 	fmt.Println("Welcome to the Dezeekees Desktop List installer")
 
 	// split string on last occurence of \ and remove the last part
 	installPath = "C:\\Program Files\\Dezeekees Desktop List"
 
-	changeInstallPath()
-
-	makeRegistryKeys()
+	if !isUpdating {
+		changeInstallPath()
+		makeRegistryKeys()
+	}
 
 	// download latest release
-	err := DownloadLatestRelease()
+	err := DownloadLatestRelease(isPrerelease)
 
 	if err != nil {
 		fmt.Println("Error downloading latest release:", err)
 	}
 
-	// wait for user input
-	fmt.Println("Press enter to exit")
-	fmt.Scanln()
+	if !isUpdating {
+		// wait for user input
+		fmt.Println("Press enter to exit")
+		fmt.Scanln()
+	}
 }
 
 func changeInstallPath() {
@@ -172,4 +188,18 @@ func CallClear() {
 	} else { //unsupported platform
 		panic("Your platform is unsupported! I can't clear terminal screen :(")
 	}
+}
+
+func includes(slice []string, target string) bool {
+	for _, item := range slice {
+		if item == target {
+			return true
+		}
+	}
+	return false
+}
+
+func amAdmin() bool {
+	_, err := os.Open("\\\\.\\PHYSICALDRIVE0")
+	return err == nil
 }
